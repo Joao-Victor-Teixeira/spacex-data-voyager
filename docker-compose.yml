@@ -1,57 +1,31 @@
-version: "3.7"
-
 services:
-  # ===============================================================================
-  # MYSQL 
-  # ===============================================================================
-  mysql-spacex:
+  spacex-mysql:
     image: mysql:8.0
     container_name: spacex-mysql
-    environment:
-      MYSQL_DATABASE: spacex_metadata
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234567
-      MYSQL_ROOT_PASSWORD: 1234567
     ports:
-      - 3308:3306  
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spacex_metadata
     volumes:
-      - ./.data/mysql_spacex/data:/var/lib/mysql
-    networks:
-      - spacex-network
+      - ./.data/mysql:/var/lib/mysql
 
-  # ===============================================================================
-  # MONGODB 
-  # ===============================================================================
-  mongodb-spacex:
+  spacex-mongodb:
     image: mongo:latest
     container_name: spacex-mongodb
+    ports:
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123
-    ports:
-      - 27018:27017 # Mudei para 27018 para evitar conflitos futuros
     volumes:
-      - ./.data/mongo_spacex/data:/data/db
-    networks:
-      - spacex-network
+      - ./.data/mongodb:/data/db
 
-  # ===============================================================================
-  # MONGO EXPRESS 
-  # ===============================================================================
-  mongo-express-spacex:
-    image: mongo-express
-    container_name: spacex-mongo-gui
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: 123
-      ME_CONFIG_MONGODB_URL: mongodb://admin:123@mongodb-spacex:27017/
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: spacex-phpmyadmin
     ports:
-      - 8082:8081 
-    depends_on:
-      - mongodb-spacex
-    networks:
-      - spacex-network
-
-networks:
-  spacex-network:
-    driver: bridge
+      - "8081:80"
+    environment:
+      PMA_HOST: spacex-mysql
+      MYSQL_ROOT_PASSWORD: root
