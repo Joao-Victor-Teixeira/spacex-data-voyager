@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RocketDTO {
     
     private String id;
+    
     private boolean active;
     private int stages;
     
     @JsonProperty("success_rate_pct")
     private int successRate;
     
-    @JsonProperty("rocket_name")
+    @JsonProperty("name")
     private String rocketName;
     
     private String description;
