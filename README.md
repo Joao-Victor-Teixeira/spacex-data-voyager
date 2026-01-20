@@ -12,7 +12,7 @@
 
 **SpaceX Data Voyager** é uma aplicação de processamento em lote (**Batch Processing**) robusta, projetada para extrair, filtrar e transformar dados técnicos da API oficial da SpaceX para armazenamento otimizado em larga escala.
 
-![Visualização dos Dados no MongoDB](assets/mongo)
+![Visualização dos Dados no MongoDB](assets/mongo.png)
 
 ## 📌 Sobre o Projeto
 
