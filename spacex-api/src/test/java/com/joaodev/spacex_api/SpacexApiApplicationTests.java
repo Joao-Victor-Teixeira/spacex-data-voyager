@@ -1,10 +1,10 @@
-package com.joaodev.sapcex_api;
+package com.joaodev.spacex_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SapcexApiApplicationTests {
+class SpacexApiApplicationTests {
 
 	@Test
 	void contextLoads() {
