@@ -47,4 +47,56 @@ Este projeto consolidou os seguintes conhecimentos práticos:
 - [x] Orquestração de serviços com **Docker Compose**.
 
 ---
+
+🧭 Roadmap e Próximos Passos
+
+O SpaceX Data Voyager foi concebido como um projeto evolutivo, permitindo expansão incremental sem comprometer a arquitetura existente. Os próximos passos planejados visam aprofundar conceitos de sistemas distribuídos, integração de dados e exposição de APIs robustas.
+
+🔜 Evoluções Planejadas
+
+Microsserviço de Lançamentos (Launch Service)
+Criação de um novo serviço responsável por consumir e persistir dados de lançamentos da SpaceX, mantendo desacoplamento entre foguetes, lançamentos e missões.
+
+Correlação de Domínio (Rocket ↔ Launch ↔ Mission)
+Implementação de um pipeline que relacione foguetes aos seus lançamentos e respectivas missões, permitindo consultas mais ricas e contextualizadas.
+
+Exposição de API REST com HATEOAS
+Disponibilização dos dados processados via API REST seguindo princípios RESTful, com suporte a Spring HATEOAS para navegação guiada por hipertexto.
+
+Enriquecimento Visual dos Dados
+Inclusão de URLs de imagens oficiais da SpaceX para tornar a API mais amigável para consumo por aplicações frontend ou dashboards.
+
+Separação por Microsserviços
+Evolução da arquitetura para múltiplos serviços independentes:
+
+Serviço de ingestão Batch
+
+Serviço de consulta de foguetes
+
+Serviço de lançamentos e missões
+
+Testes Automatizados
+Introdução gradual de:
+
+Testes unitários (JUnit 5, Mockito)
+
+Testes de integração para Jobs Batch
+
+Validação de pipelines ETL
+
+Observabilidade (futuro)
+Possível integração com logs estruturados e métricas para análise de performance e falhas em execuções Batch.
+
+🎯 Objetivo do Roadmap
+
+O foco das evoluções é consolidar fundamentos sólidos de backend, como:
+
+processamento em lote,
+
+integração entre sistemas heterogêneos,
+
+modelagem de domínio,
+
+e arquitetura escalável.
+
 Desenvolvido por João Dev. 🚀
