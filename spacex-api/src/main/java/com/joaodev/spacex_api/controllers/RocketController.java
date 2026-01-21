@@ -3,6 +3,8 @@ package com.joaodev.spacex_api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +23,8 @@ public class RocketController {
     private RocketService service;
 
     @GetMapping
-    public List<RocketDTO> findAll() {
-        return service.findAll();
+    public Page<RocketDTO> findAll(Pageable pageable) {
+        return service.findAll(pageable);
     }
 
     @GetMapping(value = "/{id}")
@@ -32,9 +34,8 @@ public class RocketController {
 
 
     @GetMapping("/active")
-    public ResponseEntity<List<RocketDTO>> findAllActive(@RequestParam(value = "active", defaultValue = "active") Boolean active){
-        List<RocketDTO> list = service.findAllActive(active);
-        return ResponseEntity.ok().body(list);
+    public Page<RocketDTO> findAllActive(Pageable pageable,@RequestParam(value = "active", defaultValue = "true") Boolean active){
+        return service.findAllActive(pageable, active);
     }
   
 }
