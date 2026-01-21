@@ -18,6 +18,8 @@ public class RocketService {
 
     public List<RocketDTO> findAll(){
         List<Rocket> list = repository.findAll();
-        return list.stream().map(x -> new RocketDTO()).collect(Collectors.toList());
+        return list.stream()
+           .map(RocketDTO::new) 
+           .collect(Collectors.toList());
     }
 }

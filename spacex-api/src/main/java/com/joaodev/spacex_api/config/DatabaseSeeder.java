@@ -1,4 +1,4 @@
-package com.joaodev.spacex_api.config;
+/*package com.joaodev.spacex_api.config;
 
 import java.util.Arrays;
 
@@ -35,3 +35,4 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
     }
 }
+*/
