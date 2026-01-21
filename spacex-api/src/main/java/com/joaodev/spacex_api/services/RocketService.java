@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joaodev.spacex_api.controllers.RocketController;
 import com.joaodev.spacex_api.models.dto.RocketDTO;
@@ -20,6 +21,7 @@ public class RocketService {
     @Autowired
     private RocketRepository repository;
 
+    @Transactional(readOnly = true)
     public Page<RocketDTO> findAll(Pageable pageable){
         Page<Rocket> result = repository.findAll(pageable);
         Page<RocketDTO> page = result.map(x -> new RocketDTO(x).add(linkTo(methodOn(RocketController.class).findAll(null)).withRel("Todos os foguetes"))
@@ -30,7 +32,7 @@ public class RocketService {
             
     }
 
-
+    @Transactional(readOnly = true)
     public RocketDTO findById(String id){
         Rocket result = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         RocketDTO dto = new RocketDTO(result).add(linkTo(methodOn(RocketController.class).findById(result.getId())).withSelfRel())
@@ -41,6 +43,7 @@ public class RocketService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public Page<RocketDTO> findAllActive(Pageable pageable,Boolean active){
         Page<Rocket> result = repository.findByActive(active, pageable);
         Page<RocketDTO> page = result.map(x -> new RocketDTO(x).add(linkTo(methodOn(RocketController.class).findAllActive(null,true)).withRel("Foguetes ativos"))
