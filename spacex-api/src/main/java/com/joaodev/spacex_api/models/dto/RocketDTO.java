@@ -1,8 +1,10 @@
 package com.joaodev.spacex_api.models.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.joaodev.spacex_api.models.entities.Rocket;
 
-public class RocketDTO {
+public class RocketDTO extends RepresentationModel<RocketDTO>{
 
     private String id;
     private String name;
