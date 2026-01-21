@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joaodev.spacex_api.models.dto.RocketDTO;
@@ -23,4 +24,11 @@ public class RocketController {
         List<RocketDTO> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<RocketDTO>> findAllActive(@RequestParam(value = "active", defaultValue = "active") Boolean active){
+        List<RocketDTO> list = service.findAllActive(active);
+        return ResponseEntity.ok().body(list);
+    }
+  
 }

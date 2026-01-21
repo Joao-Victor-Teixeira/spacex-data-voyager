@@ -22,4 +22,11 @@ public class RocketService {
            .map(RocketDTO::new) 
            .collect(Collectors.toList());
     }
+
+    public List<RocketDTO> findAllActive(Boolean active){
+        List<Rocket> list = repository.findByActive(active);
+        return list.stream()
+           .map(RocketDTO::new) 
+           .collect(Collectors.toList());
+    }
 }
