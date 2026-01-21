@@ -4,11 +4,20 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.joaodev.spacex_api.models.entities.Rocket;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class RocketDTO extends RepresentationModel<RocketDTO>{
 
+    @Schema(description = "ID único do foquete", example = "5e9d0d95eda69955f709d1eb")
     private String id;
+    
+    @Schema(description = "Nome do foguete", example = "Falcon 1")
     private String name;
+    
+    @Schema(description = "Estado de atividade do foguete(retornar boolean)", example = "false")
     private boolean active;
+    
+    @Schema(description = "Conteúdo sobre o fooguete", example = "The Falcon 1 was an expendable launch system privately...")
     private String description;
 
     public RocketDTO(){
