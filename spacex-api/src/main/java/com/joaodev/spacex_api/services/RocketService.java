@@ -3,9 +3,6 @@ package com.joaodev.spacex_api.services;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +43,11 @@ public class RocketService {
 
     public Page<RocketDTO> findAllActive(Pageable pageable,Boolean active){
         Page<Rocket> result = repository.findByActive(active, pageable);
-        Page<RocketDTO> page = result.map(RocketDTO::new); 
+        Page<RocketDTO> page = result.map(x -> new RocketDTO(x).add(linkTo(methodOn(RocketController.class).findAllActive(null,true)).withRel("Foguetes ativos"))
+                                     .add(linkTo(methodOn(RocketController.class).findAll(null)).withRel("Clique aqui para ver todos os foguetes"))
+                                     .add(linkTo(methodOn(RocketController.class).findById(x.getId())).withRel("Clique aqui para ver o foguete " + x.getName().toString()))
+                                     .add(linkTo(methodOn(RocketController.class).findAllActive(null, false)).withRel("Clique aqui para ver os foguetes inativos"))); 
+                                     
         return page;   
     }
 }
