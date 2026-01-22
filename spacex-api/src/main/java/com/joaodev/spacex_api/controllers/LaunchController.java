@@ -20,17 +20,18 @@ public class LaunchController {
     private LaunchService service;
 
     @GetMapping
-    public Page<LaunchDTO> findAll(Pageable pageable){
+    public Page<LaunchDTO> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }
 
     @GetMapping(value = "/{id}")
-    public LaunchDTO findById(@PathVariable String id){
+    public LaunchDTO findById(@PathVariable String id) {
         return service.findById(id);
     }
 
     @GetMapping(value = "/success")
-    public Page<LaunchDTO> findByLaunchSucess(Pageable pageable, @RequestParam(defaultValue = "true") Boolean launchSucess){
-        return service.findByLaunchSucess(launchSucess, pageable);
+    public Page<LaunchDTO> findByLaunchSuccess(Pageable pageable,
+            @RequestParam(defaultValue = "true") Boolean launchSucess) {
+        return service.findByLaunchSuccess(launchSucess, pageable);
     }
 }

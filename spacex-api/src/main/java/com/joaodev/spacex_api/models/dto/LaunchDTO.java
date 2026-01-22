@@ -1,8 +1,10 @@
 package com.joaodev.spacex_api.models.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.joaodev.spacex_api.models.entities.Launch;
 
-public class LaunchDTO {
+public class LaunchDTO extends RepresentationModel<LaunchDTO> {
 
     private String id;
     private int flightNumber;
