@@ -13,5 +13,4 @@ public interface LaunchRepository extends MongoRepository<Launch, String> {
 
     Page<Launch>findByRocketId(String rocketId, Pageable pageable);
 
-    long coucountByRocketId(String rocketId);
 }
