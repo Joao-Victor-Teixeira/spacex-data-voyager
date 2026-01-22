@@ -18,7 +18,7 @@ public class JobConfig {
 
         logger.info("INICIANDO TRABALHO DE EXECUÇÃO ...");
 
-        return new JobBuilder("job", jobRepository)
+        return new JobBuilder("jobLaunch", jobRepository)
                 .start(fetchLaunchDataAndStoreInDatabase)
                 .incrementer(new RunIdIncrementer())
                 .build();

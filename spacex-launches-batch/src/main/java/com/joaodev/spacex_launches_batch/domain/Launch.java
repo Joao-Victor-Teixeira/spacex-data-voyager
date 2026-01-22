@@ -1,41 +1,35 @@
-package com.joaodev.spacex_launches_batch.dto;
+package com.joaodev.spacex_launches_batch.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class LaunchDTO {
 
+
+@Document(collection = "launches")
+public class Launch {
+
+    @Id
     private String id;
-
-    @JsonProperty("flight_number")
     private int flightNumber;
-
-    @JsonProperty("mission_name")
     private String missionName;
-
-    @JsonProperty("launch_date_utc")
     private String launchDateUtc;
-
-    @JsonProperty("launch_success")
     private boolean launchSuccess;
-
     private String details;
+    
+    private String rocketId;
 
-    private RocketInnerDTO rocket;
-    private LinksInnerDTO links;
-
-    public LaunchDTO() {
+    public Launch(){
     }
 
-    public LaunchDTO(String id, int flightNumber, String missionName, String launchDateUtc,
-            boolean launchSuccess, String details, RocketInnerDTO rocket, LinksInnerDTO links) {
+    public Launch(String id, int flightNumber, String missionName, String launchDateUtc, boolean launchSuccess,
+            String details, String rocketId) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.missionName = missionName;
         this.launchDateUtc = launchDateUtc;
         this.launchSuccess = launchSuccess;
         this.details = details;
-        this.rocket = rocket;
-        this.links = links;
+        this.rocketId = rocketId;
     }
 
     public String getId() {
@@ -86,20 +80,12 @@ public class LaunchDTO {
         this.details = details;
     }
 
-    public RocketInnerDTO getRocket() {
-        return rocket;
+    public String getRocketId() {
+        return rocketId;
     }
 
-    public void setRocket(RocketInnerDTO rocket) {
-        this.rocket = rocket;
-    }
-
-    public LinksInnerDTO getLinks() {
-        return links;
-    }
-
-    public void setLinks(LinksInnerDTO links) {
-        this.links = links;
+    public void setRocketId(String rocketId) {
+        this.rocketId = rocketId;
     }
 
     @Override
@@ -118,7 +104,7 @@ public class LaunchDTO {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        LaunchDTO other = (LaunchDTO) obj;
+        Launch other = (Launch) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -129,9 +115,11 @@ public class LaunchDTO {
 
     @Override
     public String toString() {
-        return "LaunchDTO [id=" + id + ", flightNumber=" + flightNumber + ", missionName=" + missionName
+        return "Launch [id=" + id + ", flightNumber=" + flightNumber + ", missionName=" + missionName
                 + ", launchDateUtc=" + launchDateUtc + ", launchSuccess=" + launchSuccess + ", details=" + details
-                + ", rocket=" + rocket + ", links=" + links + "]";
+                + ", rocketId=" + rocketId + "]";
     }
+
+  
 
 }
