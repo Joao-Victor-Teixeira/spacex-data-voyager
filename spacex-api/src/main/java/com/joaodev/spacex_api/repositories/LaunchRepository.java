@@ -8,9 +8,12 @@ import org.springframework.stereotype.Repository;
 import com.joaodev.spacex_api.models.entities.Launch;
 
 
+
+
 @Repository
 public interface LaunchRepository extends MongoRepository<Launch, String> {
 
     Page<Launch>findByRocketId(String rocketId, Pageable pageable);
 
+    Page<Launch> findByLaunchSuccess(boolean launchSuccess, Pageable pageable);
 }
