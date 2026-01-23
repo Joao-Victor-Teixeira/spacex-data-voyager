@@ -4,15 +4,29 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.joaodev.spacex_api.models.entities.Launch;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class LaunchDTO extends RepresentationModel<LaunchDTO> {
 
+    @Schema(description = "ID único do lançamento", example = "697263cab5f990e3a82b2f4f")
     private String id;
+    
+    @Schema(description = "Número do lançamento", example = "1")
     private int flightNumber;
+    
+    @Schema(description = "Nome da missão", example = "FalconSat")
     private String missionName;
+    
+    @Schema(description = "Data do lançamento(Retorna uma String pois a API original serve em String)", example = "2006-03-24T22:30:00.000Z")
     private String launchDateUtc;
+    
+    @Schema(description = "Retorna o sucesso do lançamento (Retorna boolean)", example = "false")
     private boolean launchSuccess;
+    
+    @Schema(description = "Detalhes da missão", example = "Engine failure at 33 seconds and loss of vehicle")
     private String details;
     
+    @Schema(description = "O nome do foguete que participou da missão", example = "falcon1")
     private String rocketId;
 
     public LaunchDTO(){

@@ -52,7 +52,7 @@ public class RocketController {
                 responseCode = "200", 
                 content = @Content(schema = @Schema(implementation = RocketDTO.class))
             ),
-            @ApiResponse(description = "Not Found - Usuário inexistente", responseCode = "404", content = @Content)
+            @ApiResponse(description = "Not Found - Foguete não encontrado", responseCode = "404", content = @Content)
         })
     @GetMapping(value="/{id}", produces = "application/json")
     public RocketDTO findById(@PathVariable String id){
