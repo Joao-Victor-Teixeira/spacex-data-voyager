@@ -71,7 +71,7 @@ public class LaunchController {
             ),
             @ApiResponse(description = "Erro interno no servidor", responseCode = "500", content = @Content)
         })
-    @GetMapping(value = "/active", produces = "application/json")
+    @GetMapping(value = "/success", produces = "application/json")
     public Page<LaunchDTO> findByLaunchSuccess(Pageable pageable,
             @RequestParam(defaultValue = "true") Boolean launchSuccess) {
         return service.findByLaunchSuccess(launchSuccess, pageable);
