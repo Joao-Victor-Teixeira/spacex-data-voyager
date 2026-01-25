@@ -1,149 +1,126 @@
-# 🚀 SpaceX Data Voyager
+# 🚀 SpaceX API – Spring Boot + Batch
 
-![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
-![MySQL](https://img.shields.io/badge/MySQL-8-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-green)
-![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+API backend inspirada em dados públicos da SpaceX, desenvolvida com **Spring Boot**, **Spring Batch** e **MongoDB**, com foco em **processamento em lote**, **boas práticas de arquitetura**, **testes automatizados** e **clareza na navegação da API**.
 
-**SpaceX Data Voyager** é uma aplicação de processamento em lote (**Batch Processing**) robusta, projetada para extrair, filtrar, transformar e expor dados técnicos da API oficial da SpaceX, utilizando uma arquitetura moderna baseada no ecossistema Spring.
-
-![Visualização dos Dados no MongoDB](assets/mongo.png)
+> 📌 Projeto criado como fixação prática dos conteúdos estudados em cursos de Java/Spring (Nelio Alves), com decisões técnicas conscientes voltadas a aprendizado, legibilidade e experiência do consumidor da API.
 
 ---
 
-## 📌 Sobre o Projeto
+## 🎯 Objetivo do Projeto
 
-O projeto demonstra a implementação de um pipeline **ETL (Extract, Transform, Load)** utilizando **Spring Batch**, aliado a uma **API REST documentada e testada**, responsável por disponibilizar os dados processados.
-
-A aplicação gerencia fluxos complexos entre:
-- APIs externas (SpaceX)
-- Processamento em lote
-- Persistência poliglota (Relacional + NoSQL)
-- Exposição via API REST com boas práticas de design
+- Processar dados de foguetes, lançamentos e missões por meio de **jobs batch**
+- Persistir os dados processados no **MongoDB**
+- Expor os dados via **API REST**
+- Treinar **versionamento de API**, **relacionamento entre entidades** e **testes automatizados**
+- Simular um projeto real, indo além do *happy path*
 
 ---
 
-## ✨ Destaques Técnicos
+## 🧠 Principais Decisões Técnicas
 
-- **Processamento Orientado a Chunks**  
-  Processamento eficiente de grandes volumes de dados em lotes configuráveis, otimizando uso de memória.
+- Utilização do **Spring Batch** para ingestão e processamento de dados
+- **API REST** com versionamento por URL (`/v1`, `/v2`)
+- **Links HATEOAS mais descritivos**, priorizando clareza para consumidores não técnicos
+- Separação clara entre **jobs**, **camada de domínio**, **API** e **testes**
 
-- **Arquitetura Poliglota**  
-  - **MySQL**: controle de estado, metadados e execuções do Spring Batch  
-  - **MongoDB**: persistência dos dados de domínio (rockets, launches, missions)
-
-- **API REST Moderna**  
-  - Endpoints paginados
-  - Filtros por status (ativos/inativos)
-  - Implementação de **HATEOAS**
-
-- **Documentação OpenAPI / Swagger**  
-  Documentação automática dos endpoints para fácil exploração e entendimento da API.
-
-- **Testes Automatizados**  
-  - Testes unitários de serviços (JUnit + Mockito)
-  - Testes de integração de API com **RestAssured**
-  - Cobertura monitorada com **JaCoCo**
+> ⚠️ Observação: algumas descrições de links são propositalmente mais verbosas.  
+> A intenção é tornar a navegação da API mais autoexplicativa, inclusive para usuários leigos.
 
 ---
 
-## 🧱 Arquitetura Geral
+## 🧩 Domínio do Projeto
 
-API SpaceX
-↓
-Spring Batch (ETL)
-↓
-MongoDB (Dados de Domínio)
-↓
-Spring Boot REST API
-↓
-Swagger / Consumers
+- 🚀 **Rockets**  
+  Dados técnicos dos foguetes da SpaceX
 
+- 🛰️ **Launches**  
+  Lançamentos associados a foguetes
+
+- 🧭 **Missions**  
+  Missões espaciais, agregando lançamentos e foguetes (**v2**)
 
 ---
 
-## ☁️ Infraestrutura e Execução
+## 🔁 Versionamento da API
 
-O projeto utiliza **Docker Compose** para garantir um ambiente padronizado e reproduzível.
+| Versão | Descrição                                              |
+|------|----------------------------------------------------------|
+| v1   | Endpoints simples, entidades desacopladas                 |
+| v2   | Entidades agregadas (Missões → Lançamentos → Foguetes)    |
 
-### Serviços
+### Exemplo
 
-- **MySQL 8**
-  - Porta: `3306`
-  - Banco: `spacex_metadata`
-  - Responsável pelos metadados do Spring Batch
+```http
+GET /api/v2/missions/{id}
 
-- **MongoDB**
-  - Porta: `27017`
-  - Banco: `spacex_voyager`
-  - Coleções: `rockets`, `launches`, `missions`
+🧪 Testes
 
-- **phpMyAdmin**
-  - Porta: `8081`
-  - Monitoramento das tabelas de controle do Batch
+✅ Testes unitários
 
----
+✅ Testes de integração
 
-## 📊 Estado Atual do Projeto (Jan/2026)
+✅ RestAssured para validação dos endpoints
 
-✔️ **Concluído**
-- Pipeline Batch para ingestão de foguetes
-- Persistência em MongoDB
-- API REST para Rockets
-- Paginação e filtros
-- HATEOAS
-- Swagger / OpenAPI
-- Testes unitários (Service Layer)
-- Testes de integração (RestAssured)
-- Relatórios de cobertura com JaCoCo
-- Dockerização completa
+Os testes validam:
 
-🚧 **Em Desenvolvimento**
-- Batch de **Launches**
-- Relacionamento Rocket → Launch
-- Relacionamento Launch → Mission
+Contratos da API
 
----
+Status HTTP
 
-## 🛠️ Próximos Passos
+Estrutura dos responses
 
-- [ ] Finalizar Batch de Launches
-- [ ] Criar serviço de Missões
-- [ ] Relacionar foguetes, lançamentos e missões
-- [ ] Criar serviço de relatório semanal (quantidade de lançamentos por foguete)
-- [ ] Otimização para execução em **Raspberry Pi / HomeLab**
-- [ ] Avaliar módulo adicional com **Apache Cassandra**
+⚙️ Tecnologias Utilizadas
 
----
+Java 17+
 
-## 🧠 Desafios Técnicos Superados
+Spring Boot
 
-- Configuração de **múltiplos DataSources**
-- Integração Batch + API REST no mesmo projeto
-- Correção de mapeamento Entity → DTO
-- Testes de integração com servidor embarcado
-- Controle de cobertura sem poluir métricas irrelevantes
+Spring Batch
 
----
+Spring Data MongoDB
 
-## 🎯 Competências Desenvolvidas
+RestAssured
 
-- Spring Boot 3
-- Spring Batch
-- REST APIs
-- HATEOAS
-- OpenAPI / Swagger
-- Testes automatizados (JUnit, Mockito, RestAssured)
-- Docker e Docker Compose
-- Arquitetura poliglota
-- Boas práticas de versionamento e commits
+JUnit 5
 
----
+Maven
 
-## 👨‍💻 Autor
+Docker / Docker Compose
 
-**João Dev**  
-Projeto desenvolvido como estudo avançado de backend, batch processing e arquitetura de sistemas modernos.
+📊 Exemplos de Dados (MongoDB)
 
-🚀 *“Aprendendo a aprender, todos os dias.”*
+![Exemplo de coleções persistidas após execução dos jobs batch.]
+
+(assets/mongo.png)
+
+▶️ Como Executar o Projeto
+
+# subir bancos
+docker compose up -d
+
+# rodar aplicação
+mvn spring-boot:run
+
+🧠 Aprendizados
+
+Uso prático do Spring Batch
+
+Trade-offs entre padrão técnico e clareza para o consumidor da API
+
+Importância do versionamento de APIs
+
+Testes como parte do design da aplicação
+
+📌 Próximos Passos
+
+Refinar agregações na v2
+
+Melhorar documentação dos endpoints
+
+Expandir cobertura de testes
+
+👨‍💻 Autor
+
+João Víctor Teixeira da Costa Rossi
+
+Projeto educacional com foco em aprendizado profundo e decisões técnicas conscientes.
