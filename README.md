@@ -1,5 +1,13 @@
 # 🚀 SpaceX API – Spring Boot + Batch
 
+![Java](https://img.shields.io/badge/Java-17%2B-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
+![Spring Batch](https://img.shields.io/badge/Spring-Batch-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-brightgreen)
+![JUnit](https://img.shields.io/badge/JUnit-5-blue)
+![RestAssured](https://img.shields.io/badge/RestAssured-API%20Tests-blueviolet)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+
 API backend inspirada em dados públicos da SpaceX, desenvolvida com **Spring Boot**, **Spring Batch** e **MongoDB**, com foco em **processamento em lote**, **boas práticas de arquitetura**, **testes automatizados** e **clareza na navegação da API**.
 
 > 📌 Projeto criado como fixação prática dos conteúdos estudados em cursos de Java/Spring (Nelio Alves), com decisões técnicas conscientes voltadas a aprendizado, legibilidade e experiência do consumidor da API.
@@ -43,84 +51,55 @@ API backend inspirada em dados públicos da SpaceX, desenvolvida com **Spring Bo
 
 ## 🔁 Versionamento da API
 
-| Versão | Descrição                                              |
-|------|----------------------------------------------------------|
-| v1   | Endpoints simples, entidades desacopladas                 |
-| v2   | Entidades agregadas (Missões → Lançamentos → Foguetes)    |
+| Versão | Descrição                                           |
+|------|-------------------------------------------------------|
+| v1   | Endpoints simples, entidades desacopladas              |
+| v2   | Entidades agregadas (Missões → Lançamentos → Foguetes) |
 
-### Exemplo
+### Exemplo de Endpoint
 
 ```http
 GET /api/v2/missions/{id}
 
-🧪 Testes
+## 🧪 Testes
 
-✅ Testes unitários
-
-✅ Testes de integração
-
-✅ RestAssured para validação dos endpoints
+- ✅ Testes unitários
+- ✅ Testes de integração
+- ✅ **RestAssured** para validação dos endpoints
 
 Os testes validam:
+- Contratos da API
+- Status HTTP
+- Estrutura dos responses
 
-Contratos da API
+## ⚙️ Tecnologias Utilizadas
 
-Status HTTP
+- Java 17+
+- Spring Boot
+- Spring Batch
+- Spring Data MongoDB
+- RestAssured
+- JUnit 5
+- Maven
+- Docker / Docker Compose
 
-Estrutura dos responses
+## 📊 Exemplos de Dados (MongoDB)
 
-⚙️ Tecnologias Utilizadas
+> Exemplo de coleções persistidas após execução dos jobs batch.
 
-Java 17+
+![MongoDB Collections](assets/mongo.png)
 
-Spring Boot
+## ▶️ Como Executar o Projeto
 
-Spring Batch
-
-Spring Data MongoDB
-
-RestAssured
-
-JUnit 5
-
-Maven
-
-Docker / Docker Compose
-
-📊 Exemplos de Dados (MongoDB)
-
-![Exemplo de coleções persistidas após execução dos jobs batch.]
-
-(assets/mongo.png)
-
-▶️ Como Executar o Projeto
-
+```bash
 # subir bancos
 docker compose up -d
 
 # rodar aplicação
 mvn spring-boot:run
 
-🧠 Aprendizados
+## 👨‍💻 Autor
 
-Uso prático do Spring Batch
+**João Víctor Teixeira da Costa Rossi**
 
-Trade-offs entre padrão técnico e clareza para o consumidor da API
-
-Importância do versionamento de APIs
-
-Testes como parte do design da aplicação
-
-📌 Próximos Passos
-
-Refinar agregações na v2
-
-Melhorar documentação dos endpoints
-
-Expandir cobertura de testes
-
-👨‍💻 Autor
-
-João Víctor Teixeira da Costa Rossi
-
-Projeto educacional com foco em aprendizado profundo e decisões técnicas conscientes.
+> Projeto educacional com foco em aprendizado profundo e decisões técnicas conscientes.
