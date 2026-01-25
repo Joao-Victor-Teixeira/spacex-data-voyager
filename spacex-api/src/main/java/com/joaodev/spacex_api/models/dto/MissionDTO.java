@@ -1,25 +1,29 @@
-package com.joaodev.spacex_missions_batch.domain;
+package com.joaodev.spacex_api.models.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.joaodev.spacex_api.models.entities.Mission;
 
-@Document(collection = "missions")
-public class Mission {
+public class MissionDTO {
 
-    @Id
     private String id;
     private String missionName;
     private String wikipedia;
     private String description;
 
-    public Mission(){
+    public MissionDTO(){
     }
 
-    public Mission(String id, String missionName, String wikipedia, String description) {
+    public MissionDTO(String id, String missionName, String wikipedia, String description) {
         this.id = id;
         this.missionName = missionName;
         this.wikipedia = wikipedia;
         this.description = description;
+    }
+
+    public MissionDTO(Mission entity) {
+        id = entity.getId();
+        missionName = entity.getMissionName();
+        wikipedia = entity.getWikipedia();
+        description = entity.getDescription();
     }
 
     public String getId() {
@@ -70,7 +74,7 @@ public class Mission {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Mission other = (Mission) obj;
+        MissionDTO other = (MissionDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -79,10 +83,5 @@ public class Mission {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Mission [id=" + id + ", missionName=" + missionName + ", wikipedia=" + wikipedia + ", description="
-                + description + "]";
-    }
-    
+
 }

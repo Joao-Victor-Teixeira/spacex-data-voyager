@@ -1,4 +1,4 @@
-package com.joaodev.spacex_missions_batch.domain;
+package com.joaodev.spacex_api.models.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -78,11 +78,5 @@ public class Mission {
             return false;
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "Mission [id=" + id + ", missionName=" + missionName + ", wikipedia=" + wikipedia + ", description="
-                + description + "]";
-    }
-    
 }
+
