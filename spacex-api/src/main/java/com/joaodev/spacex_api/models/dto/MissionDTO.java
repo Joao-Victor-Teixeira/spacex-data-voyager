@@ -4,11 +4,20 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.joaodev.spacex_api.models.entities.Mission;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class MissionDTO extends RepresentationModel<MissionDTO>  {
 
+    @Schema(description = "ID único da missão", example = "6973fcae89d8f1ef9014f1c7")
     private String id;
+    
+    @Schema(description = "Nome da missão", example = "Thaicom")
     private String missionName;
+    
+    @Schema(description = "Link da wikipedia sobre a missão", example = "https://en.wikipedia.org/wiki/Thaicom")
     private String wikipedia;
+    
+    @Schema(description = "Descrição sobre a missão", example = "Thaicom is the name of a series of communications Thaicom is the name of a series of communications ...")
     private String description;
 
     public MissionDTO(){
