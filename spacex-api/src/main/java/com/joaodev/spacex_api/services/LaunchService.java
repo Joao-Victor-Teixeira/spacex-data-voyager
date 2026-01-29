@@ -34,7 +34,7 @@ public class LaunchService {
                         .withRel("Clique aqui para ver os lançamentos bem sucedidos"))
                 .add(linkTo(methodOn(LaunchController.class).findByLaunchSuccess(null, false))
                         .withRel("Clique aqui para ver os lançamentos que falharam"))
-                .add(linkTo(methodOn(RocketController.class).findAll(null))
+                .add(linkTo(methodOn(RocketController.class).findAll(null, null))
                         .withRel("all-rockets")));
 
         return page;
@@ -52,7 +52,7 @@ public class LaunchService {
                         .withRel("Clique aqui para ver os lançamentos bem sucedidos"))
                 .add(linkTo(methodOn(LaunchController.class).findByLaunchSuccess(null, false))
                         .withRel("Clique aqui para ver os lançamentos que falharam"))
-                .add(linkTo(methodOn(RocketController.class).findAll(null))
+                .add(linkTo(methodOn(RocketController.class).findAll(null, null))
                         .withRel("all-rockets"));
         return dto;
     }
@@ -68,7 +68,7 @@ public class LaunchService {
                         .withRel("Clique aqui para ver o lançamento " + x.getMissionName().toString()))
                 .add(linkTo(methodOn(LaunchController.class).findByLaunchSuccess(null, false))
                         .withRel("Clique aqui para ver os lançamentos que falharam"))
-                .add(linkTo(methodOn(RocketController.class).findAll(null))
+                .add(linkTo(methodOn(RocketController.class).findAll(null, null))
                         .withRel("all-rockets")));
 
         return page;
