@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.joaodev.spacex_api.models.dto.LaunchDTO;
 import com.joaodev.spacex_api.models.entities.Launch;
 import com.joaodev.spacex_api.repositories.LaunchRepository;
 import com.joaodev.spacex_api.services.exceptions.ResourceNotFoundException;
@@ -37,7 +36,7 @@ public class LaunchServiceTests {
     private String existingId;
     private String nonExistingId;
 
-     @BeforeEach
+    @BeforeEach
     void setUp() {
         launch = LaunchFactory.createLaunch();
         existingId = "697263cab5f990e3a82b2f4f";
@@ -45,47 +44,45 @@ public class LaunchServiceTests {
     }
 
     @Test
-    void findAllShouldReturnPagedLaunchDTO() {
+    void findAllShouldReturnPagedLaunch() {
         Page<Launch> page = new PageImpl<>(List.of(launch));
         Pageable pageable = PageRequest.of(0, 10);
 
         Mockito.when(repository.findAll(pageable)).thenReturn(page);
 
-        Page<LaunchDTO> result = service.findAll(pageable);
+        Page<Launch> result = service.findAll(pageable);
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
 
-        LaunchDTO dto = result.getContent().get(0);
+        Launch resultLaunch = result.getContent().get(0);
 
-        Assertions.assertNotNull(dto);
-        Assertions.assertEquals(launch.getId(), dto.getId());
-        Assertions.assertEquals(launch.getFlightNumber(), dto.getFlightNumber());
-        Assertions.assertEquals(launch.getMissionName(), dto.getMissionName());
-        Assertions.assertEquals(launch.getLaunchDateUtc(), dto.getLaunchDateUtc());
-        Assertions.assertFalse(launch.isLaunchSuccess());
-        Assertions.assertEquals(launch.getDetails(), dto.getDetails());
-        Assertions.assertEquals(launch.getRocketId(), dto.getRocketId());
-        
+        Assertions.assertEquals(launch.getId(), resultLaunch.getId());
+        Assertions.assertEquals(launch.getFlightNumber(), resultLaunch.getFlightNumber());
+        Assertions.assertEquals(launch.getMissionName(), resultLaunch.getMissionName());
+        Assertions.assertEquals(launch.getLaunchDateUtc(), resultLaunch.getLaunchDateUtc());
+        Assertions.assertEquals(launch.isLaunchSuccess(), resultLaunch.isLaunchSuccess());
+        Assertions.assertEquals(launch.getDetails(), resultLaunch.getDetails());
+        Assertions.assertEquals(launch.getRocketId(), resultLaunch.getRocketId());
 
         Mockito.verify(repository).findAll(pageable);
     }
 
     @Test
-    void findByIdShouldReturnLaunchDTOWhenIdExists() {
+    void findByIdShouldReturnLaunchWhenIdExists() {
         Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(launch));
 
-        LaunchDTO result = service.findById(existingId);
+        Launch result = service.findById(existingId);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(launch.getId(), result.getId());
         Assertions.assertEquals(launch.getFlightNumber(), result.getFlightNumber());
         Assertions.assertEquals(launch.getMissionName(), result.getMissionName());
         Assertions.assertEquals(launch.getLaunchDateUtc(), result.getLaunchDateUtc());
-        Assertions.assertFalse(launch.isLaunchSuccess());
+        Assertions.assertEquals(launch.isLaunchSuccess(), result.isLaunchSuccess());
         Assertions.assertEquals(launch.getDetails(), result.getDetails());
         Assertions.assertEquals(launch.getRocketId(), result.getRocketId());
-        
+
         Mockito.verify(repository).findById(existingId);
     }
 
@@ -93,7 +90,8 @@ public class LaunchServiceTests {
     void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ResourceNotFoundException.class,
+        Assertions.assertThrows(
+                ResourceNotFoundException.class,
                 () -> service.findById(nonExistingId));
 
         Mockito.verify(repository).findById(nonExistingId);
@@ -101,27 +99,24 @@ public class LaunchServiceTests {
 
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
-    void findAllActiveShouldReturnPagedRocketDTO(boolean launchSuccess) {
-        launch.setLaunchSuccess(launchSuccess);;
+    void findByLaunchSuccessShouldReturnPagedLaunch(boolean launchSuccess) {
+        launch.setLaunchSuccess(launchSuccess);
+
         Page<Launch> page = new PageImpl<>(List.of(launch));
         Pageable pageable = PageRequest.of(0, 10);
 
-        Mockito.when(repository.findByLaunchSuccess(launchSuccess, pageable)).thenReturn(page);
+        Mockito.when(repository.findByLaunchSuccess(launchSuccess, pageable))
+                .thenReturn(page);
 
-        Page<LaunchDTO> result = service.findByLaunchSuccess(launchSuccess, pageable);
+        Page<Launch> result = service.findByLaunchSuccess(launchSuccess, pageable);
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
 
-        LaunchDTO dto = result.getContent().get(0);
+        Launch resultLaunch = result.getContent().get(0);
 
-        Assertions.assertEquals(launch.getId(), dto.getId());
-        Assertions.assertEquals(launch.getFlightNumber(), dto.getFlightNumber());
-        Assertions.assertEquals(launch.getMissionName(), dto.getMissionName());
-        Assertions.assertEquals(launch.getLaunchDateUtc(), dto.getLaunchDateUtc());
-        Assertions.assertEquals(launchSuccess, dto.isLaunchSuccess());
-        Assertions.assertEquals(launch.getDetails(), dto.getDetails());
-        Assertions.assertEquals(launch.getRocketId(), dto.getRocketId());
+        Assertions.assertEquals(launch.getId(), resultLaunch.getId());
+        Assertions.assertEquals(launchSuccess, resultLaunch.isLaunchSuccess());
 
         Mockito.verify(repository).findByLaunchSuccess(launchSuccess, pageable);
     }
