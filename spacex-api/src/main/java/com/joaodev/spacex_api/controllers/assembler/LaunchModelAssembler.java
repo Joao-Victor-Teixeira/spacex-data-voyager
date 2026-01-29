@@ -15,13 +15,19 @@ public class LaunchModelAssembler implements RepresentationModelAssembler<Launch
 
     @Override
     public LaunchDTO toModel(Launch entity) {
-        
-        LaunchDTO dto = new LaunchDTO(entity); 
 
-        dto.add(linkTo(methodOn(LaunchController.class).findAll(null, null)).withSelfRel());
+        LaunchDTO dto = new LaunchDTO(entity);
+
+        dto.add(linkTo(methodOn(LaunchController.class).findById(entity.getId())).withSelfRel());
+
+        dto.add(linkTo(methodOn(LaunchController.class).findAll(null, null)).withRel("all-launches"));
+
+        dto.add(linkTo(methodOn(LaunchController.class).findByLaunchSuccess(null, true, null))
+                .withRel("launches-success"));
+        dto.add(linkTo(methodOn(LaunchController.class).findByLaunchSuccess(null, false, null))
+                .withRel("launches-no-success"));
 
         return dto;
     }
-
 
 }
