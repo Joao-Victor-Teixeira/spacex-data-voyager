@@ -19,6 +19,8 @@ public class MissionModelAssembler implements RepresentationModelAssembler<Missi
         MissionDTO dto = new MissionDTO(entity);
 
         dto.add(linkTo(methodOn(MissionController.class).findById(entity.getId())).withSelfRel());
+
+        dto.add(linkTo(methodOn(MissionController.class).findAll(null, null)).withRel("all-missions"));
         
         return dto;
     }
