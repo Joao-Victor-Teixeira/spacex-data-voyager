@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.joaodev.spacex_api.models.dto.RocketDTO;
 import com.joaodev.spacex_api.models.entities.Rocket;
 import com.joaodev.spacex_api.repositories.RocketRepository;
 import com.joaodev.spacex_api.services.exceptions.ResourceNotFoundException;
@@ -46,37 +45,37 @@ class RocketServiceTest {
     }
 
     @Test
-    void findAllShouldReturnPagedRocketDTO() {
+    void findAllShouldReturnPagedRocket() {
         Page<Rocket> page = new PageImpl<>(List.of(rocket));
         Pageable pageable = PageRequest.of(0, 10);
 
         Mockito.when(repository.findAll(pageable)).thenReturn(page);
 
-        Page<RocketDTO> result = service.findAll(pageable);
+        Page<Rocket> result = service.findAll(pageable);
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
 
-        RocketDTO dto = result.getContent().get(0);
+        Rocket resultRocket = result.getContent().get(0);
 
-        Assertions.assertEquals(rocket.getId(), dto.getId());
-        Assertions.assertEquals(rocket.getName(), dto.getName());
-        Assertions.assertEquals(rocket.getDescription(), dto.getDescription());
-        Assertions.assertEquals(rocket.isActive(), dto.isActive());
+        Assertions.assertEquals(rocket.getId(), resultRocket.getId());
+        Assertions.assertEquals(rocket.getName(), resultRocket.getName());
+        Assertions.assertEquals(rocket.getDescription(), resultRocket.getDescription());
+        Assertions.assertEquals(rocket.isActive(), resultRocket.isActive());
 
         Mockito.verify(repository).findAll(pageable);
     }
 
     @Test
-    void findByIdShouldReturnRocketDTOWhenIdExists() {
+    void findByIdShouldReturnRocketWhenIdExists() {
         Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(rocket));
 
-        RocketDTO result = service.findById(existingId);
+        Rocket resultRocket = service.findById(existingId);
 
-        Assertions.assertEquals(rocket.getId(), result.getId());
-        Assertions.assertEquals(rocket.getName(), result.getName());
-        Assertions.assertEquals(rocket.getDescription(), result.getDescription());
-        Assertions.assertEquals(rocket.isActive(), result.isActive());
+        Assertions.assertEquals(rocket.getId(), resultRocket.getId());
+        Assertions.assertEquals(rocket.getName(), resultRocket.getName());
+        Assertions.assertEquals(rocket.getDescription(), resultRocket.getDescription());
+        Assertions.assertEquals(rocket.isActive(), resultRocket.isActive());
 
         Mockito.verify(repository).findById(existingId);
     }
@@ -93,24 +92,24 @@ class RocketServiceTest {
 
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
-    void findAllActiveShouldReturnPagedRocketDTO(boolean active) {
+    void findAllActiveShouldReturnPagedRocket(boolean active) {
         rocket.setActive(active);
         Page<Rocket> page = new PageImpl<>(List.of(rocket));
         Pageable pageable = PageRequest.of(0, 10);
 
         Mockito.when(repository.findByActive(active, pageable)).thenReturn(page);
 
-        Page<RocketDTO> result = service.findAllActive(pageable, active);
+        Page<Rocket> result = service.findAllActive(pageable, active);
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
 
-        RocketDTO dto = result.getContent().get(0);
+        Rocket resultRocket = result.getContent().get(0);
 
-        Assertions.assertEquals(rocket.getId(), dto.getId());
-        Assertions.assertEquals(rocket.getName(), dto.getName());
-        Assertions.assertEquals(rocket.getDescription(), dto.getDescription());
-        Assertions.assertEquals(active, dto.isActive());
+        Assertions.assertEquals(rocket.getId(), resultRocket.getId());
+        Assertions.assertEquals(rocket.getName(), resultRocket.getName());
+        Assertions.assertEquals(rocket.getDescription(), resultRocket.getDescription());
+        Assertions.assertEquals(active, resultRocket.isActive());
 
         Mockito.verify(repository).findByActive(active, pageable);
     }
