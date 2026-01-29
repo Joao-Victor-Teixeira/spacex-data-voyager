@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.joaodev.spacex_api.models.dto.MissionDTO;
 import com.joaodev.spacex_api.models.entities.Mission;
 import com.joaodev.spacex_api.repositories.MissionRepository;
 import com.joaodev.spacex_api.services.exceptions.ResourceNotFoundException;
@@ -44,37 +43,37 @@ public class MissionServiceTests {
     }
 
     @Test
-    void findAllShouldReturnPagedMissionDTO() {
+    void findAllShouldReturnPagedMission() {
         Page<Mission> page = new PageImpl<>(List.of(mission));
         Pageable pageable = PageRequest.of(0, 10);
 
         Mockito.when(repository.findAll(pageable)).thenReturn(page);
 
-        Page<MissionDTO> result = service.findAll(pageable);
+        Page<Mission> result = service.findAll(pageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertEquals(1, result.getTotalElements());
 
-        MissionDTO dto = result.getContent().get(0);
+        Mission resultMission = result.getContent().get(0);
 
-        Assertions.assertEquals(mission.getId(), dto.getId());
-        Assertions.assertEquals(mission.getMissionName(), dto.getMissionName());
-        Assertions.assertEquals(mission.getWikipedia(), dto.getWikipedia());
-        Assertions.assertEquals(mission.getDescription(), dto.getDescription());
+        Assertions.assertEquals(mission.getId(), resultMission.getId());
+        Assertions.assertEquals(mission.getMissionName(), resultMission.getMissionName());
+        Assertions.assertEquals(mission.getWikipedia(), resultMission.getWikipedia());
+        Assertions.assertEquals(mission.getDescription(), resultMission.getDescription());
 
         Mockito.verify(repository).findAll(pageable);
     }
 
     @Test
-    void findByIdShouldReturnMissiontDTOWhenIdExists() {
+    void findByIdShouldReturnMissionWhenIdExists() {
         Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(mission));
 
-        MissionDTO result = service.findById(existingId);
+        Mission resultMission = service.findById(existingId);
 
-        Assertions.assertEquals(mission.getId(), result.getId());
-        Assertions.assertEquals(mission.getMissionName(), result.getMissionName());
-        Assertions.assertEquals(mission.getWikipedia(), result.getWikipedia());
-        Assertions.assertEquals(mission.getDescription(), result.getDescription());
+        Assertions.assertEquals(mission.getId(), resultMission.getId());
+        Assertions.assertEquals(mission.getMissionName(), resultMission.getMissionName());
+        Assertions.assertEquals(mission.getWikipedia(), resultMission.getWikipedia());
+        Assertions.assertEquals(mission.getDescription(), resultMission.getDescription());
 
         Mockito.verify(repository).findById(existingId);
     }
