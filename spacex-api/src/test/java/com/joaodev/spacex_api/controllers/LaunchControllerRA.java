@@ -24,6 +24,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.joaodev.spacex_api.models.entities.Launch;
 import com.joaodev.spacex_api.services.LaunchService;
 import com.joaodev.spacex_api.services.exceptions.ResourceNotFoundException;
+import com.joaodev.spacex_api.tests.LaunchFactory;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -37,14 +38,13 @@ class LaunchControllerRA {
     @MockitoBean
     private LaunchService service;
 
-    private Launch launchMock;
+    private Launch launchMock = LaunchFactory.createLaunch();
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
-        launchMock = new Launch();
         launchMock.setId("5eb87cd9ffd86e000604b32a");
         launchMock.setMissionName("FalconSat");
         launchMock.setLaunchSuccess(true);
