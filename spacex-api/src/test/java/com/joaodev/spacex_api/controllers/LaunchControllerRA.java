@@ -1,120 +1,128 @@
 package com.joaodev.spacex_api.controllers;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.joaodev.spacex_api.models.entities.Launch;
 import com.joaodev.spacex_api.services.LaunchService;
 import com.joaodev.spacex_api.services.exceptions.ResourceNotFoundException;
-import com.joaodev.spacex_api.tests.LaunchFactory;
 
-@WebMvcTest(controllers = LaunchController.class)
-class LaunchControllerTest {
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
-    @Autowired
-    private MockMvc mockMvc;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class LaunchControllerRA {
+
+    @LocalServerPort
+    private int port;
 
     @MockitoBean
     private LaunchService service;
 
-    private Launch launch;
-    private String existingId;
-    private String nonExistingId;
+    private Launch launchMock;
 
     @BeforeEach
     void setUp() {
-        launch = LaunchFactory.createLaunch();
-        existingId = "697263cab5f990e3a82b2f4f";
-        nonExistingId = "5e9d0d95eda69955f70921ea";
+        RestAssured.port = port;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+        launchMock = new Launch();
+        launchMock.setId("5eb87cd9ffd86e000604b32a");
+        launchMock.setMissionName("FalconSat");
+        launchMock.setLaunchSuccess(true);
+        
     }
 
     @Test
-    void findAllShouldReturnPagedModelWithLinks() throws Exception {
-
-        Page<Launch> page = new PageImpl<>(
-                List.of(launch),
-                PageRequest.of(0, 10),
-                1
-        );
-
+    @DisplayName("Deve retornar página de lançamentos com status 200")
+    void shouldReturnPageOfLaunches_WhenFindAll() {
+        
+        Page<Launch> page = new PageImpl<>(List.of(launchMock));
+        
+        
         when(service.findAll(any(Pageable.class))).thenReturn(page);
 
-        mockMvc.perform(get("/launches")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-
-                .andExpect(jsonPath("$._links.self.href").exists())
-
-                .andExpect(jsonPath("$._embedded.launchDTOList[0].id").exists())
-
-                .andExpect(jsonPath("$._embedded.launchDTOList[0]._links.self.href").exists())
-                .andExpect(jsonPath("$._embedded.launchDTOList[0]._links.all-launches.href").exists());
+        given()
+            .contentType(ContentType.JSON)
+        .when()
+            .get("/launches")
+        .then()
+            .statusCode(200)
+            
+            .body("_embedded", notNullValue()) 
+            
+            .body("_embedded.launchDTOList[0].id", equalTo(launchMock.getId()))
+            .body("page.totalElements", equalTo(1));
     }
 
     @Test
-    void findByIdShouldReturnLaunchWhenIdExists() throws Exception {
+    @DisplayName("Deve retornar um lançamento específico por ID com status 200")
+    void shouldReturnLaunch_WhenFindById() {
+        
+        when(service.findById("5eb87cd9ffd86e000604b32a")).thenReturn(launchMock);
 
-        when(service.findById(existingId)).thenReturn(launch);
-
-        mockMvc.perform(get("/launches/{id}", existingId)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(existingId))
-                .andExpect(jsonPath("$.flightNumber").value(launch.getFlightNumber()))
-                .andExpect(jsonPath("$.missionName").value(launch.getMissionName()))
-                .andExpect(jsonPath("$.launchSuccess").value(launch.isLaunchSuccess()))
-                .andExpect(jsonPath("$.rocketId").value(launch.getRocketId()))
-                .andExpect(jsonPath("$._links.self.href").exists());
+        given()
+            .pathParam("id", "5eb87cd9ffd86e000604b32a")
+        .when()
+            .get("/launches/{id}")
+        .then()
+            .statusCode(200)
+            .body("id", equalTo(launchMock.getId()))
+            .body("missionName", equalTo(launchMock.getMissionName()))
+            .body("_links.self.href", containsString("/launches/5eb87cd9ffd86e000604b32a"));
     }
 
     @Test
-    void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+    @DisplayName("Deve retornar 404 quando o lançamento não existe")
+    void shouldReturnNotFound_WhenLaunchDoesNotExist() {
+        
+        String nonExistentId = "999";
+        
+        when(service.findById(nonExistentId))
+            .thenThrow(new ResourceNotFoundException("Recurso não encontrado"));
 
-        when(service.findById(nonExistingId))
-                .thenThrow(ResourceNotFoundException.class);
-
-        mockMvc.perform(get("/launches/{id}", nonExistingId)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.error").exists());
+        given()
+            .pathParam("id", nonExistentId)
+        .when()
+            .get("/launches/{id}")
+        .then()
+            
+            .statusCode(404);
     }
 
     @Test
-    void findByLaunchSuccessShouldReturnPagedModel() throws Exception {
+    @DisplayName("Deve retornar lançamentos filtrados por sucesso")
+    void shouldReturnSuccessLaunches_WhenFindByLaunchSuccess() {
+        
+        Page<Launch> page = new PageImpl<>(List.of(launchMock));
+        
+        when(service.findByLaunchSuccess(eq(true), any(Pageable.class))).thenReturn(page);
 
-        Page<Launch> page = new PageImpl<>(
-                List.of(launch),
-                PageRequest.of(0, 10),
-                1
-        );
-
-        when(service.findByLaunchSuccess(eq(true), any(Pageable.class)))
-                .thenReturn(page);
-
-        mockMvc.perform(get("/launches/success")
-                .param("launchSuccess", "true")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.launchDTOList").isArray())
-                .andExpect(jsonPath("$._links.self.href").exists());
+        given()
+            .queryParam("launchSuccess", "true")
+        .when()
+            .get("/launches/success")
+        .then()
+            .statusCode(200)
+            .body("_embedded.launchDTOList", hasSize(1))
+            .body("_embedded.launchDTOList[0].launchSuccess", equalTo(true));
     }
 }
