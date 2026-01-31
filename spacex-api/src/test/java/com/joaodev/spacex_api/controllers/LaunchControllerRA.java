@@ -48,81 +48,80 @@ class LaunchControllerRA {
         launchMock.setId("5eb87cd9ffd86e000604b32a");
         launchMock.setMissionName("FalconSat");
         launchMock.setLaunchSuccess(true);
-        
+
     }
 
     @Test
     @DisplayName("Deve retornar página de lançamentos com status 200")
     void shouldReturnPageOfLaunches_WhenFindAll() {
-        
+
         Page<Launch> page = new PageImpl<>(List.of(launchMock));
-        
-        
+
         when(service.findAll(any(Pageable.class))).thenReturn(page);
 
         given()
-            .contentType(ContentType.JSON)
-        .when()
-            .get("/launches")
-        .then()
-            .statusCode(200)
-            
-            .body("_embedded", notNullValue()) 
-            
-            .body("_embedded.launchDTOList[0].id", equalTo(launchMock.getId()))
-            .body("page.totalElements", equalTo(1));
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/launches")
+                .then()
+                .statusCode(200)
+
+                .body("_embedded", notNullValue())
+
+                .body("_embedded.launchDTOList[0].id", equalTo(launchMock.getId()))
+                .body("page.totalElements", equalTo(1));
     }
 
     @Test
     @DisplayName("Deve retornar um lançamento específico por ID com status 200")
     void shouldReturnLaunch_WhenFindById() {
-        
+
         when(service.findById("5eb87cd9ffd86e000604b32a")).thenReturn(launchMock);
 
         given()
-            .pathParam("id", "5eb87cd9ffd86e000604b32a")
-        .when()
-            .get("/launches/{id}")
-        .then()
-            .statusCode(200)
-            .body("id", equalTo(launchMock.getId()))
-            .body("missionName", equalTo(launchMock.getMissionName()))
-            .body("_links.self.href", containsString("/launches/5eb87cd9ffd86e000604b32a"));
+                .pathParam("id", "5eb87cd9ffd86e000604b32a")
+                .when()
+                .get("/launches/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(launchMock.getId()))
+                .body("missionName", equalTo(launchMock.getMissionName()))
+                .body("_links.self.href", containsString("/launches/5eb87cd9ffd86e000604b32a"));
     }
 
     @Test
     @DisplayName("Deve retornar 404 quando o lançamento não existe")
     void shouldReturnNotFound_WhenLaunchDoesNotExist() {
-        
+
         String nonExistentId = "999";
-        
+
         when(service.findById(nonExistentId))
-            .thenThrow(new ResourceNotFoundException("Recurso não encontrado"));
+                .thenThrow(new ResourceNotFoundException("Recurso não encontrado"));
 
         given()
-            .pathParam("id", nonExistentId)
-        .when()
-            .get("/launches/{id}")
-        .then()
-            
-            .statusCode(404);
+                .pathParam("id", nonExistentId)
+                .when()
+                .get("/launches/{id}")
+                .then()
+
+                .statusCode(404);
     }
 
     @Test
     @DisplayName("Deve retornar lançamentos filtrados por sucesso")
     void shouldReturnSuccessLaunches_WhenFindByLaunchSuccess() {
-        
+
         Page<Launch> page = new PageImpl<>(List.of(launchMock));
-        
+
         when(service.findByLaunchSuccess(eq(true), any(Pageable.class))).thenReturn(page);
 
         given()
-            .queryParam("launchSuccess", "true")
-        .when()
-            .get("/launches/success")
-        .then()
-            .statusCode(200)
-            .body("_embedded.launchDTOList", hasSize(1))
-            .body("_embedded.launchDTOList[0].launchSuccess", equalTo(true));
+                .queryParam("launchSuccess", "true")
+                .when()
+                .get("/launches/success")
+                .then()
+                .statusCode(200)
+                .body("_embedded.launchDTOList", hasSize(1))
+                .body("_embedded.launchDTOList[0].launchSuccess", equalTo(true));
     }
 }
